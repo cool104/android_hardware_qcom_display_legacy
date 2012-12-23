@@ -2,7 +2,7 @@
 #libs to be built for QCOM targets only
 
 ifneq ($(filter msm7x27,$(TARGET_BOARD_PLATFORM)),)
-
+ifeq ($(TARGET_QCOM_DISPLAY_VARIANT),)
 display-hals := libgralloc libgenlock libcopybit
 display-hals += libhwcomposer liboverlay libqdutils
 
@@ -13,5 +13,5 @@ endif
 display-hals += libtilerenderer
 
 include $(call all-named-subdir-makefiles,$(display-hals))
-
+endif
 endif

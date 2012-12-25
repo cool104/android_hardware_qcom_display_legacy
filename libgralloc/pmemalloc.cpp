@@ -37,6 +37,10 @@
 #include "pmemalloc.h"
 #include "pmem_bestfit_alloc.h"
 
+#ifdef ECLAIR_LIBCAMERA
+#include <cutils/properties.h>
+#endif
+
 using namespace gralloc;
 using android::sp;
 
@@ -51,6 +55,13 @@ static int getPmemTotalSize(int fd, size_t* size)
         err = -errno;
     } else {
         *size = region.len;
+#ifdef ECLAIR_LIBCAMERA
+        char value[PROPERTY_VALUE_MAX];
+        property_get("persist.pmem.camera", value, "4000000");
+        unsigned int pmem_camera = atoi(value);
+        ALOGD("%s: Allocating %d bytes of pmem for camera", __FUNCTION__, pmem_camera);
+        *size = *size - pmem_camera;
+#endif
     }
     return err;
 }
